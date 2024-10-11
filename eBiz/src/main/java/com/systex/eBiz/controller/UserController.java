@@ -1,12 +1,14 @@
 package com.systex.eBiz.controller;
 
 import com.systex.eBiz.model.User;
+import com.systex.eBiz.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +16,15 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
-    private static List<User> userList;
-
-
-    public UserController() {
-        this.userList = new ArrayList<>();
+    private final UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
+//    private static List<User> userList;
+
+//    public UserController() {
+//        this.userList = new ArrayList<>();
+//    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registerForm() {
@@ -37,27 +42,36 @@ public class UserController {
         User user = new User();
         user.setLoginname(loginname);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(userService.hashPassword(password));
+        userService.addUser(user);
 
-        userList.add(user);
-
-        return "/loginForm";
+        return "redirect:/user/login";
 
     }
 
-    @RequestMapping(value = "login")
+    @ResponseBody
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(@RequestParam("loginname") String loginname,
 
                         @RequestParam("password") String password, Model model, HttpSession session) {
-        for (User user : userList) {
-            if (user.getLoginname().equals(loginname) &&
-                    user.getPassword().equals(password)) {
-                session.setAttribute("user", user);  // 登入成功後將 user 資訊存入 session
-                model.addAttribute("user", user);
-                return "/main";
-            }
+        String hashedPassword = userService.hashPassword(password);
+        User user = userService.getUser(loginname, hashedPassword);
+        if (user != null) {
+            session.setAttribute("user", user);
+            model.addAttribute("user", user);
+            return "success";
         }
-        return "/loginForm";
+        return "failure";
+//        String hashedPassword = hashPassword(password);
+//        for (User user : userList) {
+//            if (user.getLoginname().equals(loginname) &&
+//                    user.getPassword().equals(hashedPassword)) {
+//                session.setAttribute("user", user);  // 登入成功後將 user 資訊存入 session
+//                model.addAttribute("user", user);
+//                return "success";
+//            }
+//        }
+//        return "failure";
 
     }
 

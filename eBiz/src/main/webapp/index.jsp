@@ -1,7 +1,10 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="com.systex.eBiz.model.User" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>

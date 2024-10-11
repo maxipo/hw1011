@@ -1,5 +1,6 @@
 package com.systex.eBiz.service;
 
+import org.hibernate.metamodel.internal.JpaStaticMetaModelPopulationSetting;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class LotteryService {
         for (int i = 0; i < groups; i++) {
             Set<Integer> numbers = new TreeSet<>();
             while (numbers.size() != 6) {
-                random = (int) Math.ceil(Math.random() * 49);
+                random = (int) (Math.random() * 49 + 1);
                 if (!excludeNumbers.contains(random)) {
                     numbers.add(random);
                 }
@@ -30,4 +31,5 @@ public class LotteryService {
         }
         return lists;
     }
+
 }

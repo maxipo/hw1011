@@ -33,6 +33,8 @@
             </div>
         </div>
     </div>
+    </body>
+</html>
 <%--
 <form action="register" method="post">
     <table>
@@ -55,8 +57,7 @@
 </form>
 --%>
 
-</body>
-</html>
+
 
 
 

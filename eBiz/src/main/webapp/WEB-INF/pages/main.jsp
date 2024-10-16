@@ -20,7 +20,7 @@
         <div class="row justify-content-center">
             <div class="col-md-4">
              <h3 class="text-center">Hello Lottery</h3>
-            <form action="${pageContext.request.contextPath}/lotteryController" method="post" class="form-inline justify-content-center">
+            <form action="${pageContext.request.contextPath}/LotteryController" method="post" class="form-inline justify-content-center">
                 <div class="form-group">
                     <label for="group" class="sr-only">組數</label>
                     <input type="text" class="form-control" name="group" placeholder="組數">

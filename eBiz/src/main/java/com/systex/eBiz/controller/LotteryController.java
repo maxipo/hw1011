@@ -1,7 +1,6 @@
 package com.systex.eBiz.controller;
 
 import com.systex.eBiz.service.LotteryService;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 @Controller
 @RequestMapping
 //@WebServlet(name = "lotteryController", value = "/Lottery/lotteryController")
-public class lotteryController {
+public class LotteryController {
 
     @Autowired
     private LotteryService lotteryService;
@@ -30,7 +29,7 @@ public class lotteryController {
         return "../../index";  // 返回 index.jsp
     }
 
-    @PostMapping("/lotteryController")
+    @PostMapping("/LotteryController")
     public String drawLottery(@RequestParam("group") int group, @RequestParam("exclude") String exclude, Model model) {
         // Retrieve Form Data
         String[] excludes = exclude.split(" ");

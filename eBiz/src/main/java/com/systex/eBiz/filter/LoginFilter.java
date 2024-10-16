@@ -44,6 +44,8 @@ public class LoginFilter implements Filter {
 
         HttpSession session = req.getSession(false);
         String requestPath = req.getRequestURI(); // 獲取當前請求的 URL
+        System.out.println("Request Path: " + requestPath); // 日誌請求路徑
+        System.out.println("Session: " + session); // 日誌 session 狀態
 
          if (whitelistUrls.contains(requestPath)) {
             chain.doFilter(request, response);
@@ -54,24 +56,35 @@ public class LoginFilter implements Filter {
         if (session == null || session.getAttribute("user") == null) {
             // 如果沒有登入，導向到登入頁面
             res.sendRedirect(req.getContextPath() + "/user/login");
-        } else {
-            // 如果已登入，繼續處理後續請求
-            chain.doFilter(request, response);
+            return;
         }
+//        } else {
+//            // 如果已登入，繼續處理後續請求
+//            chain.doFilter(request, response);
+//        }
 
-         // 登入驗證
-        if (requestPath.equals(req.getContextPath() + "/user/login") && "POST".equalsIgnoreCase(req.getMethod())) {
+        if ("POST".equalsIgnoreCase(req.getMethod()) && requestPath.equals(req.getContextPath() + "/user/login")) {
             String loginname = req.getParameter("loginname");
             String password = req.getParameter("password");
 
-            // 使用 validateInput 方法驗證輸入
-            if (!userService.validateInput(loginname, password)) {
-                res.setContentType("text/html;charset=UTF-8");
-                res.getWriter().write("<html><body><h3>登錄失敗，請檢查您的登錄名稱或密碼。</h3></body></html>");
-                return;
+            if (loginname == null || loginname.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+                res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                res.setContentType("application/json");
+                String jsonResponse = "{\"message\": \"請填寫所有必填欄位\"}"; // JSON 响应
+                res.getWriter().write(jsonResponse); // 写入响应
+                return; // 終止請求處理
             }
-        }
 
+//            // Validate credentials using the UserService (example, adjust as necessary)
+//            if (!userService.validateInput(loginname, password)) {
+//                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                res.setContentType("application/json");
+//                String jsonResponse = "{\"message\": \"無效的登入名稱或密碼\"}";
+//                res.getWriter().write(jsonResponse);
+//                return; // Stop further processing
+//            }
+        }
+        chain.doFilter(request, response);
     }
 
     @Override

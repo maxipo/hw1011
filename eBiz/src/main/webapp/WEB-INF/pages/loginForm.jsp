@@ -35,12 +35,12 @@
     </div>
     <script>
         $(document).ready(function() {
-            $("#submit").click(function() {
+            $("#submit").click(function(event) {
                 event.preventDefault();
                 var loginname = $("#loginname").val();
                 var password = $("#password").val();
 
-                // // 檢查欄位是否為空
+                // 檢查欄位是否為空
                 // if (loginname === "" || password === "") {
                 //     $("#loginResult").text("請輸入登錄名稱和密碼");
                 //     return;
@@ -60,11 +60,26 @@
                             window.location.href = "${pageContext.request.contextPath}/main";
                         } else {
                             // 顯示錯誤消息
+                            console.log("Login Name: " + loginname);
+                            console.log("Password: " + password);
                             $("#loginResult").text("登錄失敗，請檢查您的登錄名稱或密碼");
                         }
                     },
-                    error: function() {
-                        $("#loginResult").text("伺服器發生錯誤，請稍後再試");
+                    error: function(xhr) {
+                        // if (jqXHR.status === 403) {
+                        //     var errorResponse = JSON.parse(jqXHR.responseText);
+                        //     $("#loginResult").text(errorResponse.message);  // 顯示 Filter 返回的錯誤訊息
+                        // } else
+                        //     $("#loginResult").text("伺服器發生錯誤，請稍後再試");
+                        // }
+                        console.log("Error Status: " + xhr.status); // 輸出狀態碼
+                        console.log("Response Text: " + xhr.responseText); // 輸出回應文本
+                        if (xhr.status === 400) {
+                        // 捕獲 400 錯誤，顯示返回的錯誤消息
+                            $("#loginResult").text(xhr.responseText);
+                        } else {
+                            $("#loginResult").text("伺服器發生錯誤，請稍後再試");
+                        }
                     }
                 });
             });

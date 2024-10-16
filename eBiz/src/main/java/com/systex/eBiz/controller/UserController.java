@@ -61,6 +61,7 @@ public class UserController {
             model.addAttribute("user", user);
             return "success";
         }
+        System.out.println("hi it's me");
         return "failure";
 //        String hashedPassword = hashPassword(password);
 //        for (User user : userList) {
